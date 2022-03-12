@@ -22,8 +22,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', userRouter);
 app.use('/', cardRouter);
 
-app.get('/', (req, res) => {
-  res.send('hello mugivara');
+app.get((req, res) => {
+  res.status(404).send({ message: 'Не правильный путь' });
 });
 
 app.listen(PORT);
