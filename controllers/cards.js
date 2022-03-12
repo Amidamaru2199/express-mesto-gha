@@ -45,8 +45,13 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
-    .then((like) => res.send(like))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .then((like) => {
+      if (!like) {
+        res.status(404).send({ message: 'Несуществующий id карточки' });
+      }
+      res.send(like);
+    })
+    .catch(() => res.status(400).send({ message: 'Некорректный id карточки' }));
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -55,6 +60,11 @@ module.exports.dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   )
-    .then((like) => res.send(like))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .then((like) => {
+      if (!like) {
+        res.status(404).send({ message: 'Несуществующий id карточки' });
+      }
+      res.send(like);
+    })
+    .catch(() => res.status(400).send({ message: 'Некорректный id карточки' }));
 };
