@@ -44,7 +44,7 @@ module.exports.getUserId = (req, res) => {
         });
       }
     })
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(() => res.status(400).send({ message: 'Некорректный id пользователя' }));
 };
 
 module.exports.updateUser = (req, res) => {
@@ -62,7 +62,13 @@ module.exports.updateUser = (req, res) => {
       name: user.name,
       about: user.about,
     }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некоректные данные при обновлении данных пользователя' });
+      } else {
+        res.status(500).send({ message: 'Переданы некоректные данные при обновлении данных пользователя' });
+      }
+    });
 };
 
 module.exports.updateUserAvatar = (req, res) => {

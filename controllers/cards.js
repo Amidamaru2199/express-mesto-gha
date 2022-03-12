@@ -9,8 +9,15 @@ module.exports.createCard = (req, res) => {
       name: card.name,
       link: card.link,
       owner: card.owner,
+      _id: card._id,
     }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некоректные данные при создании карточки' });
+      } else {
+        res.status(500).send({ message: 'Переданы некоректные данные при создании карточки' });
+      }
+    });
 };
 
 module.exports.getCards = (req, res) => {
