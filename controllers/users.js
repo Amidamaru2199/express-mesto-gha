@@ -3,9 +3,6 @@ const User = require('../models/user');
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
-  if ((name.length < 2 || name.length > 30) && (about.length < 2 || about.length > 30) && !avatar) {
-    res.status(400).send({ message: 'Некорректные данные' });
-  }
   // записываем данные в базу
   User.create({ name, about, avatar })
     // возвращаем записанные в базу данные пользователю
@@ -16,7 +13,13 @@ module.exports.createUser = (req, res) => {
       _id: user._id,
     }))
     // если данные не записались, вернём ошибку
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некоректные данные при создании пользователя' });
+      } else {
+        res.status(500).send({ message: 'Переданы некоректные данные при создании пользователя' });
+      }
+    });
 };
 
 module.exports.getUsers = (req, res) => {
