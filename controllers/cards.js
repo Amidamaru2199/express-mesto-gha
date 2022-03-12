@@ -23,8 +23,13 @@ module.exports.getCards = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => res.send(card))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: 'Карточка не найдена' });
+      }
+      res.send(card);
+    })
+    .catch(() => res.status(400).send({ message: 'Некорректный id карточки' }));
 };
 
 module.exports.likeCard = (req, res) => {
