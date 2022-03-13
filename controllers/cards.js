@@ -15,7 +15,7 @@ module.exports.createCard = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некоректные данные при создании карточки' });
       } else {
-        res.status(500).send({ message: 'Переданы некоректные данные при создании карточки' });
+        res.status(500).send({ message: 'Произошла ошибка' });
       }
     });
 };
@@ -36,7 +36,13 @@ module.exports.deleteCard = (req, res) => {
       }
       res.send(card);
     })
-    .catch(() => res.status(400).send({ message: 'Некорректный id карточки' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Невалидный id ' });
+      } else {
+        res.status(500).send({ message: 'Произошла ошибка' });
+      }
+    });
 };
 
 module.exports.likeCard = (req, res) => {
@@ -51,7 +57,13 @@ module.exports.likeCard = (req, res) => {
       }
       res.send(like);
     })
-    .catch(() => res.status(400).send({ message: 'Некорректный id карточки' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Невалидный id ' });
+      } else {
+        res.status(500).send({ message: 'Произошла ошибка' });
+      }
+    });
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -66,5 +78,11 @@ module.exports.dislikeCard = (req, res) => {
       }
       res.send(like);
     })
-    .catch(() => res.status(400).send({ message: 'Некорректный id карточки' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Невалидный id ' });
+      } else {
+        res.status(500).send({ message: 'Произошла ошибка' });
+      }
+    });
 };
