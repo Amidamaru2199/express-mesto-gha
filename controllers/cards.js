@@ -29,16 +29,24 @@ module.exports.getCards = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => {
+  Card.findById(req.params.cardId)
+    .then((card) => { //
       if (!card) {
-        res.status(404).send({ message: 'Карточка не найдена' });
+        res.status(400).send({ message: 'Карточка не найдена' });
       }
-      res.send(card);
+      if (String(card.owner) === req.user._id) {
+        Card.findByIdAndRemove(req.params.cardId)
+          .then(() => { //
+            res.send({ message: 'Пост удален' });
+          });
+      } else {
+        res.status(403).send({ message: 'Нельзя удалять чужую карточку' });
+      }
     })
     .catch((err) => {
+      // console.dir(err);
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Невалидный id ' });
+        res.status(400).send({ message: 'Невалидный id' });
       } else {
         res.status(500).send({ message: 'Произошла ошибка' });
       }
