@@ -4,7 +4,7 @@ const UnauthorizedError = require('../errors/UnauthorizedError');
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    next(new UnauthorizedError('Нужно авторизироваться'));
+    return next(new UnauthorizedError('Нужно авторизироваться'));
   }
   const token = authorization.replace('Bearer ', '');
   let payload;
